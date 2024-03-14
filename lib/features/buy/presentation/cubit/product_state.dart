@@ -12,9 +12,6 @@ class ProductErrorState extends ProductState {
   ProductErrorState({required this.message});
 }
 
-
-
-
 class ProductLoadedState extends ProductState {
   final List<ProductModel> model;
 
