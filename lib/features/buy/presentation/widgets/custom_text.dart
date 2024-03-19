@@ -1,23 +1,28 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class CustomText extends StatelessWidget {
-  String? content;
+  String? text;
   double? size;
   FontWeight? fontweight;
   Color? color;
+  int? maxlines;
 
   CustomText({
-    super.key,
-    this.content,
+    Key? key,
+    this.text,
     this.size,
     this.fontweight,
     this.color,
-  });
+    this.maxlines,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      content ?? '',
+      text ?? '',
+      maxLines: maxlines ?? 3,
+      softWrap: true,
       style: TextStyle(
           fontSize: size ?? 18,
           fontWeight: fontweight ?? FontWeight.w500,

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           scaffoldBackgroundColor: AppColor.scaffoldColor,
-          appBarTheme: AppBarTheme(color: AppColor.primaryColor)),
+          appBarTheme: AppBarTheme(color: AppColor.white)),
       title: 'Ecomm',
       home: const HomePage(),
     );

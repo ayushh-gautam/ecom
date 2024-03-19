@@ -6,10 +6,11 @@ class AppColor {
   static Color lightTextFieldBorder = const Color(0xff9F9F9F);
   static Color errorTextColor = const Color(0xffFF0000);
   static Color primaryColor = const Color(0xff6726a8);
+ 
   static Color subYellow = const Color(0xffE3A710);
   static Color orange = const Color(0xffFB7D60);
   static Color black = const Color(0xff2D2D2D);
-  static Color greyText = const Color(0xff9c9b9f);
+  static Color greyText = Color.fromARGB(255, 225, 224, 227);
   static Color cyan = const Color(0xff10CBBF);
   static Color blue = Color.fromARGB(255, 36, 26, 235);
   static Color dividerWhiteColor = const Color(0xffE4E4E4);
