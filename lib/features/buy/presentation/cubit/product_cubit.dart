@@ -14,8 +14,8 @@ class ProductCubit extends Cubit<ProductState> {
     emit(ProductLoadingState());
     var response = await _productRepository.getProduct();
     response.fold((l) {
-      print(l!.message);
-      emit(ProductErrorState(message: l!.message.toString()));
+      // print(l!.message);
+      emit(ProductErrorState(message: l.toString()));
     }, (r) {
       emit(ProductLoadedState(model: r!));
     });

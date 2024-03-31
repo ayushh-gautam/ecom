@@ -1,19 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
-
 import 'package:ecom/core/constants/app_color.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
-
 import '../../data/model/product_model.dart';
 
 class DetailPage extends StatefulWidget {
   ProductModel myProduct;
   DetailPage({
-    Key? key,
+    super.key,
     required this.myProduct,
-  }) : super(key: key);
+  });
 
   @override
   State<DetailPage> createState() => _DetailPageState();
