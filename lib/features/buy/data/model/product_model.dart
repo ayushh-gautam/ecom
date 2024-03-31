@@ -14,7 +14,7 @@ class ProductModel extends ResponseModel {
     String? title;
     double? price;
     String? description;
-    Category? category;
+    String? category;
     String? image;
     Rating? rating;
 
@@ -33,7 +33,7 @@ class ProductModel extends ResponseModel {
         title: json["title"],
         price: json["price"]?.toDouble(),
         description: json["description"],
-        category: categoryValues.map[json["category"]]!,
+        category: json["category"],
         image: json["image"],
         rating: json["rating"] == null ? null : Rating.fromJson(json["rating"]),
     );

@@ -32,36 +32,21 @@ class _NewPageState extends State<NewPage> {
               expandedHeight: 200.0,
             ),
             sectionText('Categories'),
+
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 100.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.model.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (state.model[index].category ==
-                        Category.JEWELERY) {
-                      return GestureDetector(
-                        onTap: () {
-                          // Navigate to category page
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(13)),
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          padding: const EdgeInsets.all(15.0),
-                          alignment: Alignment.center,
-                          child: Image.network(
-                              state.model[index].image.toString()),
-                        ),
-                      );
-                    } else {
-                      return SizedBox();
-                    }
-                  },
-                ),
-              ),
+                  height: 100.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(Category.values.length, (index) {
+                      print(Category.values[index].name);
+                      return Row(
+                          children: categoryItemSection(
+                                  state, Category.values[index].name, index) ??
+                              []);
+                    }),
+                  )),
             ),
 
             //Featured productss
@@ -114,12 +99,10 @@ class _NewPageState extends State<NewPage> {
             onTap: () {
               // Navigate to product details page
             },
-            child: Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 20, bottom: 20),
-                child: Image.network(state.model[index].image.toString()),
-              ),
+            child: Image.network(
+              state.model[index].image.toString(),
+              height: 200,
+              width: 200,
             ),
           );
         },
@@ -141,5 +124,35 @@ class _NewPageState extends State<NewPage> {
         ),
       ),
     );
+  }
+
+  List<Widget>? categoryItemSection(
+      ProductLoadedState state, String categoryName, int index) {
+    List.generate(state.model.length, (productIndex) {
+      if (state.model[productIndex].category == categoryName) {
+        print(categoryName);
+        return GestureDetector(
+          onTap: () {
+            // Navigate to category page
+          },
+          child: Container(
+            height: 300,
+            width: 200,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(13)),
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.all(15.0),
+            alignment: Alignment.center,
+            child: Image.network(
+              state.model[0].image.toString(),
+              height: 200,
+              width: 200,
+            ),
+          ),
+        );
+      } else {
+        return SizedBox();
+      }
+    });
   }
 }
