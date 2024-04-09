@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static Color scaffoldColor = const Color(0xffffffff);
+  static Color scaffoldColor = Color.fromARGB(255, 235, 235, 235);
   static Color darkTextFieldBorder = const Color(0xffBDBDBD);
   static Color lightTextFieldBorder = const Color(0xff9F9F9F);
   static Color errorTextColor = const Color(0xffFF0000);

@@ -1,15 +1,12 @@
-// To parse this JSON data, do
-//
-//     final productModel = productModelFromJson(jsonString);
 import 'dart:convert';
 
-import 'package:ecom/core/network/network.dart';
+import '../../../../core/network/network.dart';
 
 List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(json.decode(str).map((x) => ProductModel.fromJson(x)));
 
 String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ProductModel extends ResponseModel {
+class ProductModel extends ResponseModel{
     int? id;
     String? title;
     double? price;
@@ -43,25 +40,11 @@ class ProductModel extends ResponseModel {
         "title": title,
         "price": price,
         "description": description,
-        "category": categoryValues.reverse[category],
+        "category": category,
         "image": image,
         "rating": rating?.toJson(),
     };
 }
-
-enum Category {
-    ELECTRONICS,
-    JEWELERY,
-    MEN_S_CLOTHING,
-    WOMEN_S_CLOTHING
-}
-
-final categoryValues = EnumValues({
-    "electronics": Category.ELECTRONICS,
-    "jewelery": Category.JEWELERY,
-    "men's clothing": Category.MEN_S_CLOTHING,
-    "women's clothing": Category.WOMEN_S_CLOTHING
-});
 
 class Rating {
     double? rate;
@@ -81,16 +64,4 @@ class Rating {
         "rate": rate,
         "count": count,
     };
-}
-
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        reverseMap = map.map((k, v) => MapEntry(v, k));
-        return reverseMap;
-    }
 }
