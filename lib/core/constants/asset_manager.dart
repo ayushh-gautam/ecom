@@ -1,12 +1,5 @@
 class PngAssets {
+  //example
   static String pngBasePath = 'resources/images';
-  static String dummy = "$pngBasePath/dummy.png"; // only for example
+  static String dummy = "$pngBasePath/dummy.png";
 }
-
-class SvgAssets {
-  static String svgBasePath = 'resources/images';
-  static String svgBaseIconPath = 'resources/icons';
-  static String svgFoodmanduLogo = '$svgBasePath/dummy.svg';
-}
-
-class JpgAssets {}

@@ -2,7 +2,7 @@
 import 'package:bloc/bloc.dart';
 
 import 'package:ecom/features/buy/domain/repository/product_repo.dart';
-import 'package:ecom/features/buy/presentation/cubit/product_state.dart';
+import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
 
 class ProductCubit extends Cubit<ProductState> {
   ProductCubit(

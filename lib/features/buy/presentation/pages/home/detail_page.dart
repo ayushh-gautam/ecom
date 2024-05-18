@@ -1,12 +1,12 @@
-// ignore_for_file: must_be_immutable
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecom/features/buy/presentation/widgets/rating.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:ecom/core/constants/app_color.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
-import '../../data/model/product_model.dart';
+import '../../../data/model/product_model.dart';
+import '../../cubit/cart/cart_cubit.dart';
 
 class DetailPage extends StatefulWidget {
   ProductModel myProduct;
@@ -31,7 +31,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.white,
-      bottomNavigationBar: bottomBar(),
+      bottomNavigationBar: bottomBar(context),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
@@ -81,7 +81,6 @@ class _DetailPageState extends State<DetailPage> {
                   size: 18,
                   fontweight: FontWeight.w600,
                 ),
-
                 Row(
                   children: [
                     Container(
@@ -106,37 +105,38 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     CustomText(
                       text: widget.myProduct.rating!.rate!.toString(),
+                      color: Colors.grey.shade800,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
                     CustomText(
-                      text:
-                          '(${widget.myProduct.rating!.count!.toString()} reviews)',
-                    )
+                        text:
+                            '(${widget.myProduct.rating!.count!.toString()} reviews)',
+                        color: Colors.grey.shade800)
                   ],
                 ).marginOnly(top: 10),
                 const Divider(
                         thickness: 1.5,
                         color: Color.fromARGB(255, 240, 240, 240))
                     .marginOnly(top: 10, bottom: 10),
-
-                // CustomText(
-                //   text: '\$${widget.myProduct.price}',
-                //   size: 20,
-                //   color: AppColor.trendUpColor,
-                //   fontweight: FontWeight.w800,
-                // ).marginOnly(top: 10, bottom: 20),
+                CustomText(
+                  text: '\$${widget.myProduct.price}',
+                  size: 20,
+                  color: AppColor.trendUpColor,
+                  fontweight: FontWeight.w800,
+                ).marginOnly(top: 10, bottom: 20),
                 CustomText(
                   text: 'Product Description',
                   size: 20,
                   fontweight: FontWeight.w700,
                 ),
                 CustomText(
-                  text: widget.myProduct.description,
-                  maxlines: 4,
-                  size: 16.5,
-                ).marginOnly(top: 10),
+                        text: widget.myProduct.description,
+                        maxlines: 4,
+                        size: 16.5,
+                        color: Colors.grey.shade700)
+                    .marginOnly(top: 10),
               ],
             ).marginOnly(left: 15, right: 15, bottom: 60),
           )),
@@ -145,21 +145,38 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  BottomAppBar bottomBar() {
+  BottomAppBar bottomBar(BuildContext context) {
     return BottomAppBar(
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: Colors.white,
+      notchMargin: 0,
+      elevation: 0,
+      clipBehavior: Clip.antiAlias,
+      shadowColor: Colors.transparent,
       padding: const EdgeInsets.all(0),
-      height: 70,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.elliptical(30, 20),
-                topRight: Radius.elliptical(30, 20))),
-        child: CustomText(
-          text: 'Helo hello',
-        ),
+      height: 65,
+      child: GestureDetector(
+        onTap: () {
+          context.read<CartCubit>().addToCart(widget.myProduct);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(milliseconds: 300),
+              content: Text('Product added to cart'),
+            ),
+          );
+        },
+        child: Container(
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.elliptical(30, 20),
+                  topRight: Radius.elliptical(30, 20),
+                  bottomLeft: Radius.elliptical(30, 20),
+                  bottomRight: Radius.elliptical(30, 20))),
+          child: CustomText(
+            text: 'Add to cart',
+          ),
+        ).marginOnly(bottom: 5, left: 20, right: 20),
       ),
     );
   }

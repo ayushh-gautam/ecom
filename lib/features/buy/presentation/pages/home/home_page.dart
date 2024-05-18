@@ -1,14 +1,11 @@
-import 'package:ecom/features/buy/data/model/product_model.dart';
-import 'package:ecom/features/buy/presentation/cubit/product_cubit.dart';
-import 'package:ecom/features/buy/presentation/cubit/product_state.dart';
-import 'package:ecom/features/buy/presentation/pages/detail_page.dart';
-import 'package:ecom/features/buy/presentation/pages/loading_page.dart';
+import 'package:ecom/core/constants/app_color.dart';
+import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
+import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
+import 'package:ecom/features/buy/presentation/pages/home/detail_page.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/utils.dart';
-
-import '../widgets/rating.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,50 +29,22 @@ class _HomePageState extends State<HomePage> {
       } else if (state is ProductLoadedState) {
         return CustomScrollView(
           slivers: [
-            const SliverAppBar(
-              title: Text('E-Commerce App'),
+            SliverAppBar(
+              elevation: 0,
+              centerTitle: true,
+              title: CustomText(
+                text: 'E-Commerce',
+                fontweight: FontWeight.w600,
+                size: 22,
+              ),
               floating: true,
               expandedHeight: 10.0,
             ),
             sectionText('Trending Products'),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 170.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5, //
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to product details page
-                      },
-                      child: Container(
-                        width: 150.0,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 10),
-                        color: Colors.orange[100 * ((index % 9) + 1)],
-                        alignment: Alignment.center,
-                        child: Text('Trending Product $index'),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
+            trendingSlide(state),
 
             sectionText('Categories'),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                  height: 100.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(state.model.length, (index) {
-                      print(state.model[index].category);
-                      return const Row(children: []);
-                    }),
-                  )),
-            ),
+            categorySlide(context, state),
 
             //Featured productss
             sectionText('Featured Products'),
@@ -85,8 +54,65 @@ class _HomePageState extends State<HomePage> {
       } else if (state is ProductErrorState) {
         return Text(state.message);
       }
-      return const LoadingPage();
+      return const CircularProgressIndicator(
+        color: Colors.transparent,
+      );
     })));
+  }
+
+  SliverToBoxAdapter categorySlide(
+      BuildContext context, ProductLoadedState state) {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+          height: 50.0,
+          width: MediaQuery.of(context).size.width,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: List.generate(state.model.length, (index) {
+              return const Row(children: []);
+            }),
+          )),
+    );
+  }
+
+  SliverToBoxAdapter trendingSlide(ProductLoadedState state) {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 250.0,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: state.model.length - 14,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return DetailPage(myProduct: state.model[index + 14]);
+                  },
+                ));
+              },
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                // clipBehavior: Clip.antiAlias,
+                width: 200.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                alignment: Alignment.center,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                      width: 190,
+                      fit: BoxFit.contain,
+                      state.model[index + 14].image.toString()),
+                ),
+              ).marginSymmetric(horizontal: 10),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   SliverGrid featuredProducts(ProductLoadedState state) {
@@ -127,16 +153,20 @@ class _HomePageState extends State<HomePage> {
                   ).marginOnly(top: 10),
                   Row(
                     children: [
-                      StarRating(
-                          rating:
-                              state.model[index + 12].rating!.rate!.toDouble()),
+                      Icon(
+                        Icons.star_half,
+                        color: Colors.yellow,
+                        size: 16,
+                      ),
                       CustomText(
-                        size: 12,
+                        size: 14,
+                        color: Colors.brown.shade700,
                         text: state.model[index + 12].rating!.rate!.toString(),
                       ),
                       CustomText(
                         size: 12,
-                        text: ('/(${state.model[index + 12].rating!.count!})'),
+                        text:
+                            ('/5 (${state.model[index + 12].rating!.count!})'),
                       ),
                     ],
                   )

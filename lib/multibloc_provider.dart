@@ -1,8 +1,8 @@
-import 'package:ecom/features/buy/presentation/cubit/product_cubit.dart';
+import 'package:ecom/features/buy/presentation/cubit/cart/cart_cubit.dart';
+import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 import 'service_locator.dart';
 
@@ -15,6 +15,10 @@ class MultiBlocProviderClass extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<ProductCubit>(
         create: (_) => ProductCubit(sl()),
+      ),
+
+      BlocProvider<CartCubit>(
+        create: (_) => CartCubit(),
       ),
 
       //-------Cubits

@@ -23,9 +23,9 @@ class CustomText extends StatelessWidget {
       text ?? '',
       maxLines: maxlines ?? 3,
       softWrap: true,
+      overflow: TextOverflow.fade,
       style: TextStyle(
           overflow: TextOverflow.clip,
-          
           fontSize: size ?? 18,
           fontWeight: fontweight ?? FontWeight.w500,
           color: color ?? Colors.black),
