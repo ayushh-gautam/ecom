@@ -1,6 +1,6 @@
-import 'package:ecom/core/constants/app_color.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
+import 'package:ecom/features/buy/presentation/pages/home/category_page.dart';
 import 'package:ecom/features/buy/presentation/pages/home/detail_page.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -63,34 +63,50 @@ class _HomePageState extends State<HomePage> {
 
   SliverToBoxAdapter categorySlide(
       BuildContext context, ProductLoadedState state) {
+    var catagoriesList = [
+      "men's clothing",
+      "jewelery",
+      "electronics",
+      "women's clothing"
+    ];
     return SliverToBoxAdapter(
         child: SizedBox(
-            height: 50.0,
+            height: 60.0,
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: List.generate(state.model.length, (productIndex) {
-                if (state.model[productIndex].category == 'jwellery') {
-                  return GestureDetector(
-                    onTap: () {
-                      // Navigate to category page
-                    },
-                    child: Container(
-                        height: 300,
-                        width: 200,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(13)),
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        padding: const EdgeInsets.all(15.0),
-                        alignment: Alignment.center,
-                        child: CustomText(
-                          text: state.model[0].category.toString(),
-                        )),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              }),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(catagoriesList.length, (productIndex) {
+                  if (catagoriesList[productIndex] == catagoriesList[0] ||
+                      catagoriesList[productIndex] == catagoriesList[1] ||
+                      catagoriesList[productIndex] == catagoriesList[2] ||
+                      catagoriesList[productIndex] == catagoriesList[3]) {
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to category page
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return CategoryPage(
+                              category: catagoriesList[productIndex]);
+                        }));
+                      },
+                      child: Container(
+                          width: 180,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(13)),
+                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.all(15.0),
+                          alignment: Alignment.center,
+                          child: CustomText(
+                            text: catagoriesList[productIndex].toString(),
+                          )),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                }),
+              ),
             )));
   }
 

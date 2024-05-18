@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class CustomText extends StatelessWidget {
   String? text;
   double? size;
+  TextOverflow? overflow;
   FontWeight? fontweight;
   Color? color;
   int? maxlines;
@@ -12,6 +13,7 @@ class CustomText extends StatelessWidget {
     super.key,
     this.text,
     this.size,
+    this.overflow,
     this.fontweight,
     this.color,
     this.maxlines,
@@ -23,9 +25,8 @@ class CustomText extends StatelessWidget {
       text ?? '',
       maxLines: maxlines ?? 3,
       softWrap: true,
-      overflow: TextOverflow.fade,
+      overflow: overflow,
       style: TextStyle(
-          overflow: TextOverflow.clip,
           fontSize: size ?? 18,
           fontWeight: fontweight ?? FontWeight.w500,
           color: color ?? Colors.black),
