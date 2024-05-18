@@ -63,7 +63,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             height: 90,
                           ),
                           const Gap(15),
-                          Container(
+                          SizedBox(
                             width: 180,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

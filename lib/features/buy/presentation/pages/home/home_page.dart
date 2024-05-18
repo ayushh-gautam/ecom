@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
   SliverGrid featuredProducts(ProductLoadedState state) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 0.68,
+        childAspectRatio: 0.66,
         crossAxisCount: 2,
         mainAxisSpacing: 16.0,
         crossAxisSpacing: 1.0,
