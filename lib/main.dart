@@ -1,5 +1,4 @@
 import 'package:ecom/core/constants/app_color.dart';
-import 'package:ecom/features/buy/presentation/pages/home/home_page.dart';
 import 'package:ecom/features/buy/presentation/pages/home/main_page.dart';
 import 'package:ecom/multibloc_provider.dart';
 import 'package:ecom/service_locator.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColor.scaffoldColor,
           appBarTheme: AppBarTheme(color: AppColor.white)),
       title: 'Ecomm',
-      home: const MainPage(),
+      home: MainPage(),
     );
   }
 }

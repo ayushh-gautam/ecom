@@ -5,6 +5,7 @@ import 'package:ecom/features/buy/presentation/pages/home/detail_page.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:get/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,16 +64,34 @@ class _HomePageState extends State<HomePage> {
   SliverToBoxAdapter categorySlide(
       BuildContext context, ProductLoadedState state) {
     return SliverToBoxAdapter(
-      child: SizedBox(
-          height: 50.0,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: List.generate(state.model.length, (index) {
-              return const Row(children: []);
-            }),
-          )),
-    );
+        child: SizedBox(
+            height: 50.0,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: List.generate(state.model.length, (productIndex) {
+                if (state.model[productIndex].category == 'jwellery') {
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to category page
+                    },
+                    child: Container(
+                        height: 300,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(13)),
+                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.all(15.0),
+                        alignment: Alignment.center,
+                        child: CustomText(
+                          text: state.model[0].category.toString(),
+                        )),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
+            )));
   }
 
   SliverToBoxAdapter trendingSlide(ProductLoadedState state) {
@@ -118,7 +137,7 @@ class _HomePageState extends State<HomePage> {
   SliverGrid featuredProducts(ProductLoadedState state) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 0.66,
+        childAspectRatio: 0.68,
         crossAxisCount: 2,
         mainAxisSpacing: 16.0,
         crossAxisSpacing: 1.0,
@@ -151,20 +170,22 @@ class _HomePageState extends State<HomePage> {
                     fontweight: FontWeight.w500,
                     text: state.model[index + 12].title,
                   ).marginOnly(top: 10),
+                  const Gap(10),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.star_half,
                         color: Colors.yellow,
                         size: 16,
                       ),
+                      Gap(10),
                       CustomText(
-                        size: 14,
+                        size: 16,
                         color: Colors.brown.shade700,
                         text: state.model[index + 12].rating!.rate!.toString(),
                       ),
                       CustomText(
-                        size: 12,
+                        size: 16,
                         text:
                             ('/5 (${state.model[index + 12].rating!.count!})'),
                       ),
@@ -195,34 +216,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget>? categoryItemSection(
-      ProductLoadedState state, String categoryName, int index) {
-    List.generate(state.model.length, (productIndex) {
-      if (state.model[productIndex].category == categoryName) {
-        print(categoryName);
-        return GestureDetector(
-          onTap: () {
-            // Navigate to category page
-          },
-          child: Container(
-            height: 300,
-            width: 200,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(13)),
-            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-            padding: const EdgeInsets.all(15.0),
-            alignment: Alignment.center,
-            child: Image.network(
-              state.model[0].image.toString(),
-              height: 200,
-              width: 200,
-            ),
-          ),
-        );
-      } else {
-        return const SizedBox();
-      }
-    });
-    return null;
+  List<Widget> categoryItemSection(
+    ProductLoadedState state,
+    String categoryName,
+  ) {
+    return [];
   }
 }

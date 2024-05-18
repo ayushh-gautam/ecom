@@ -59,14 +59,14 @@ class CartPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Gap(20),
+                      Spacer(),
                       GestureDetector(
                         onTap: () {
                           context.read<CartCubit>().deleteCart(product);
                         },
                         child: const Icon(
                           Icons.delete,
-                          size: 40,
+                          size: 30,
                           color: Colors.red,
                         ),
                       )
