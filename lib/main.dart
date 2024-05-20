@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColor.scaffoldColor,
           appBarTheme: AppBarTheme(color: AppColor.white)),
       title: 'Ecomm',
-      home: MainPage(),
+      home: const MainPage(),
     );
   }
 }

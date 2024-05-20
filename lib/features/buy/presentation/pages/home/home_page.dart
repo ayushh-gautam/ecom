@@ -1,3 +1,4 @@
+import 'package:ecom/features/buy/domain/repository/product_repo.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
 import 'package:ecom/features/buy/presentation/pages/home/category_page.dart';
@@ -6,7 +7,10 @@ import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
+
+import '../../../data/model/product_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +20,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String myImage =
+      'https://www.elegantthemes.com/blog/wp-content/uploads/2022/01/lazy-loading.png';
   @override
   void initState() {
     super.initState();
@@ -26,43 +32,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(body:
         BlocBuilder<ProductCubit, ProductState>(builder: (context, state) {
-      if (state is ProductLoadingState) {
-      } else if (state is ProductLoadedState) {
-        return CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              elevation: 0,
-              centerTitle: true,
-              title: CustomText(
-                text: 'E-Commerce',
-                fontweight: FontWeight.w600,
-                size: 22,
-              ),
-              floating: true,
-              expandedHeight: 10.0,
+      return CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: CustomText(
+              text: 'E-Commerce',
+              fontweight: FontWeight.w600,
+              size: 22,
             ),
-            sectionText('Trending Products'),
-            trendingSlide(state),
+            floating: true,
+            expandedHeight: 10.0,
+          ),
+          sectionText('Trending Products'),
+          trendingSlide(context.read<ProductCubit>().myModel),
 
-            sectionText('Categories'),
-            categorySlide(context, state),
+          sectionText('Categories'),
+          categorySlide(context, context.read<ProductCubit>().myModel),
 
-            //Featured productss
-            sectionText('Featured Products'),
-            featuredProducts(state),
-          ],
-        );
-      } else if (state is ProductErrorState) {
-        return Text(state.message);
-      }
-      return const CircularProgressIndicator(
-        color: Colors.transparent,
+          //Featured productss
+          sectionText('Featured Products'),
+          featuredProducts(context.read<ProductCubit>().myModel),
+        ],
       );
     })));
   }
 
   SliverToBoxAdapter categorySlide(
-      BuildContext context, ProductLoadedState state) {
+      BuildContext context, List<ProductModel>? myModel) {
     var catagoriesList = [
       "men's clothing",
       "jewelery",
@@ -110,21 +108,23 @@ class _HomePageState extends State<HomePage> {
             )));
   }
 
-  SliverToBoxAdapter trendingSlide(ProductLoadedState state) {
+  SliverToBoxAdapter trendingSlide(List<ProductModel>? myModel) {
     return SliverToBoxAdapter(
       child: SizedBox(
         height: 250.0,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: state.model.length - 14,
+          itemCount: myModel?.length,
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return DetailPage(myProduct: state.model[index + 14]);
-                  },
-                ));
+                if (myModel != null) {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return DetailPage(myProduct: myModel[index]);
+                    },
+                  ));
+                }
               },
               child: Container(
                 padding: const EdgeInsets.all(20),
@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                   child: Image.network(
                       width: 190,
                       fit: BoxFit.contain,
-                      state.model[index + 14].image.toString()),
+                      myModel?[index].image.toString() ?? myImage),
                 ),
               ).marginSymmetric(horizontal: 10),
             );
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  SliverGrid featuredProducts(ProductLoadedState state) {
+  SliverGrid featuredProducts(List<ProductModel>? myModel) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         childAspectRatio: 0.66,
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
           return GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (builder) {
-                return DetailPage(myProduct: state.model[index + 12]);
+                return DetailPage(myProduct: myModel?[index] ?? ProductModel());
               }));
             },
             child: Container(
@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.network(
-                    state.model[index + 12].image.toString(),
+                    myModel?[index].image.toString() ?? myImage,
                     height: 190,
                     width: 200,
                   ),
@@ -184,7 +184,8 @@ class _HomePageState extends State<HomePage> {
                     maxlines: 2,
                     size: 16,
                     fontweight: FontWeight.w500,
-                    text: state.model[index + 12].title,
+                    text: myModel?[index].title ??
+                        'https://www.elegantthemes.com/blog/wp-content/uploads/2022/01/lazy-loading.png',
                   ).marginOnly(top: 10),
                   const Gap(10),
                   Row(
@@ -198,12 +199,11 @@ class _HomePageState extends State<HomePage> {
                       CustomText(
                         size: 16,
                         color: Colors.brown.shade700,
-                        text: state.model[index + 12].rating!.rate!.toString(),
+                        text: myModel?[index].rating!.rate!.toString() ?? '',
                       ),
                       CustomText(
                         size: 16,
-                        text:
-                            ('/5 (${state.model[index + 12].rating!.count!})'),
+                        text: ('/5 (${myModel?[index].rating!.count!})'),
                       ),
                     ],
                   )
@@ -212,7 +212,9 @@ class _HomePageState extends State<HomePage> {
             ).marginSymmetric(horizontal: 10),
           );
         },
-        childCount: 6, // Assuming 6 featured products
+        childCount: (myModel?.length ?? 0) <= 6
+            ? myModel?.length
+            : 6, // Assuming 6 featured products
       ),
     );
   }
