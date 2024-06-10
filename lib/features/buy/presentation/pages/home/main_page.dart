@@ -1,7 +1,6 @@
 import 'package:ecom/features/buy/presentation/pages/home/home_page.dart';
 import 'package:ecom/features/buy/presentation/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/main.dart';
 
 import '../cart/cart_page.dart';
 
@@ -22,6 +21,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: myList[myIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: myIndex,

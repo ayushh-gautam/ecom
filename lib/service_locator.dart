@@ -14,8 +14,10 @@ setupLocators() async {
   //
   sl.registerLazySingleton<http.Client>(() => http.Client());
 
+  
   sl.registerSingleton<Network>(DefaultNetwork(sl()));
 
   // login Injection Container
+ 
   ProductInjectionContainer().register();
 }

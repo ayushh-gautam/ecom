@@ -1,4 +1,3 @@
-import 'package:ecom/features/buy/domain/repository/product_repo.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
 import 'package:ecom/features/buy/presentation/pages/home/category_page.dart';
@@ -7,7 +6,6 @@ import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
 
 import '../../../data/model/product_model.dart';
@@ -30,33 +28,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body:
-        BlocBuilder<ProductCubit, ProductState>(builder: (context, state) {
-      return CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: CustomText(
-              text: 'E-Commerce',
-              fontweight: FontWeight.w600,
-              size: 22,
-            ),
-            floating: true,
-            expandedHeight: 10.0,
-          ),
-          sectionText('Trending Products'),
-          trendingSlide(context.read<ProductCubit>().myModel),
+    return SafeArea(
+        child: Scaffold(
+            body: Center(
+      child: SizedBox(
+        width:
+            MediaQuery.of(context).size.width > 1200 ? 1200 : double.infinity,
+        child:
+            BlocBuilder<ProductCubit, ProductState>(builder: (context, state) {
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                elevation: 0,
+                centerTitle: true,
+                title: CustomText(
+                  text: 'E-Commerce',
+                  fontweight: FontWeight.w600,
+                  size: 22,
+                ),
+                floating: true,
+                expandedHeight: 10.0,
+              ),
+              sectionText('Trending Products'),
+              trendingSlide(context.read<ProductCubit>().myModel),
 
-          sectionText('Categories'),
-          categorySlide(context, context.read<ProductCubit>().myModel),
+              sectionText('Categories'),
+              categorySlide(context, context.read<ProductCubit>().myModel),
 
-          //Featured productss
-          sectionText('Featured Products'),
-          featuredProducts(context.read<ProductCubit>().myModel),
-        ],
-      );
-    })));
+              //Featured productss
+              sectionText('Featured Products'),
+              featuredProducts(context.read<ProductCubit>().myModel),
+            ],
+          );
+        }),
+      ),
+    )));
   }
 
   SliverToBoxAdapter categorySlide(
