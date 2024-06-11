@@ -1,13 +1,14 @@
 import 'package:ecom/core/constants/app_color.dart';
+import 'package:ecom/core/hive/hive_settings.dart';
 import 'package:ecom/features/buy/presentation/pages/home/main_page.dart';
 import 'package:ecom/multibloc_provider.dart';
 import 'package:ecom/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await setupLocators();
-
+  HiveSetting().init();
   runApp(const MultiBlocProviderClass(MyApp()));
 }
 
