@@ -4,6 +4,9 @@ import 'package:ecom/features/buy/data/model/product_model.dart';
 
 import 'package:ecom/features/buy/domain/repository/product_repo.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
+import 'package:ecom/features/offline/presentation/cubit/offline_cubit.dart';
+
+import '../../../../../service_locator.dart';
 
 class ProductCubit extends Cubit<ProductState> {
   ProductCubit(
@@ -12,7 +15,7 @@ class ProductCubit extends Cubit<ProductState> {
   final ProductRepository _productRepository;
 
   List<ProductModel> myModel = [];
-  Future<void> getProduct() async {
+  Future<ProductModel?> getProduct() async {
     emit(ProductLoadingState());
     var response = await _productRepository.getProduct();
     response.fold((l) {
@@ -21,7 +24,9 @@ class ProductCubit extends Cubit<ProductState> {
       emit(ProductErrorState(message: l.toString()));
     }, (r) {
       myModel = r ?? [];
+
       emit(ProductLoadedState(model: r!));
+      return r;
     });
   }
 }

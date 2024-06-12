@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_cubit.dart';
 import 'package:ecom/features/buy/presentation/cubit/product/product_state.dart';
 import 'package:ecom/features/buy/presentation/pages/home/category_page.dart';
@@ -5,9 +6,11 @@ import 'package:ecom/features/buy/presentation/pages/home/detail_page.dart';
 import 'package:ecom/features/buy/presentation/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/utils.dart';
 
+import '../../../../offline/presentation/cubit/offline_cubit.dart';
 import '../../../data/model/product_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,10 +23,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String myImage =
       'https://www.elegantthemes.com/blog/wp-content/uploads/2022/01/lazy-loading.png';
+
+  void checkDataSaved() async {
+    var shouldAdd = await context.read<OfflineCubit>().dataSync();
+
+    await context.read<ProductCubit>().getProduct();
+    var myModel = context.read<ProductCubit>().myModel;
+    if (myModel != null) {
+      if (shouldAdd) {
+        print('the data has been stored');
+        context.read<OfflineCubit>().saveData(myModel);
+      } else {
+        print('data will only be stored when the time is right');
+      }
+    } else {
+      print('data will only be stored when the time is right');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    context.read<ProductCubit>().getProduct();
+    checkDataSaved();
   }
 
   @override
@@ -116,41 +137,45 @@ class _HomePageState extends State<HomePage> {
 
   SliverToBoxAdapter trendingSlide(List<ProductModel>? myModel) {
     return SliverToBoxAdapter(
-      child: SizedBox(
-        height: 250.0,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: myModel?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                if (myModel != null) {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return DetailPage(myProduct: myModel[index]);
-                    },
-                  ));
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                // clipBehavior: Clip.antiAlias,
-                width: 200.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                alignment: Alignment.center,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                      width: 190,
-                      fit: BoxFit.contain,
-                      myModel?[index].image.toString() ?? myImage),
-                ),
-              ).marginSymmetric(horizontal: 10),
-            );
-          },
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(
+            (myModel?.length ?? 0) <= 5 ? (myModel?.length ?? 0) : 5,
+            (index) {
+              return GestureDetector(
+                onTap: () {
+                  if (myModel != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return DetailPage(myProduct: myModel[index]);
+                        },
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: myModel?[index].image.toString() ?? myImage,
+                        width: 190,
+                        height: 200,
+                        fit: BoxFit.contain,
+                      )),
+                ).marginSymmetric(horizontal: 10),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -158,11 +183,11 @@ class _HomePageState extends State<HomePage> {
 
   SliverGrid featuredProducts(List<ProductModel>? myModel) {
     return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 0.66,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        childAspectRatio: 0.6,
         crossAxisCount: 2,
-        mainAxisSpacing: 16.0,
-        crossAxisSpacing: 1.0,
+        mainAxisSpacing: 16.h,
+        crossAxisSpacing: 1.h,
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
